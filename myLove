@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Жүрек 💖</title>
+
+<style>
+body {
+    font-family: Arial;
+    text-align: center;
+    background: linear-gradient(135deg, #ffe6eb, #ffd6e0);
+    overflow: hidden;
+    padding: 20px;
+}
+
+h1 {
+    color: #ff4d6d;
+    font-size: 22px;
+}
+
+button {
+    padding: 15px;
+    font-size: 18px;
+    margin: 10px;
+    border: none;
+    border-radius: 12px;
+    width: 80%;
+    max-width: 300px;
+}
+
+.good { background: #4CAF50; color: white; }
+.bad { background: #ff4d4d; color: white; }
+
+/* ❤️ жүрек анимация */
+.heart {
+    position: fixed;
+    bottom: -20px;
+    color: red;
+    font-size: 20px;
+    animation: floatUp 5s linear infinite;
+}
+
+@keyframes floatUp {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-800px); opacity: 0; }
+}
+
+input[type=range] {
+    width: 80%;
+}
+</style>
+</head>
+
+<body>
+
+<h1 id="question">Жүрек, менімен кездесуге шығасың ба? 💖</h1>
+<div id="answers"></div>
+
+<script>
+let step = 0;
+
+const noVariants = ["Қойшы 😢","Жоқ деме 🙄","Бірге шығайықшы 🥺","Келісе салшы 😏","Өтінем 😭"];
+let noIndex = 0;
+
+function renderStart(){
+    answers.innerHTML = `
+    <button class="good" onclick="nextStep()">Иә ❤️</button>
+    <button class="bad" onclick="changeNo(this)">Жоқ 😢</button>
+    `;
+}
+
+function changeNo(btn){
+    noIndex = (noIndex + 1) % noVariants.length;
+    btn.innerText = noVariants[noIndex];
+}
+
+function nextStep(){
+    step++;
+
+    if(step===1){
+        renderQ("Жүрек, қалай барамыз? 😍",[
+            ["Таксимен келесің 🚕",0],
+            ["Өзің алып кетесің 😎",0],
+            ["Жаяу қол ұстасып 👫",1]
+        ]);
+    }
+    else if(step===2){
+        renderQ("Қайда барамыз? 😏",[
+            ["Жай жүріп қайтамыз 😐",0],
+            ["Просто отырамыз 😴",0],
+            ["Суши жейміз 🍣",1]
+        ]);
+    }
+    else if(step===3){
+        renderQ("Счетты кім төлейді? 💸",[
+            ["Сен 😅",0],
+            ["50/50 🤝",0],
+            ["Мен 😎",1]
+        ]);
+    }
+    else showSlider();
+}
+
+function renderQ(text,opts){
+    question.innerText=text;
+    answers.innerHTML="";
+    opts.forEach(o=>{
+        let b=document.createElement("button");
+        b.innerText=o[0];
+        b.className=o[1]?"good":"bad";
+        b.onclick=()=> o[1]?nextStep():b.innerText=randomFail();
+        answers.appendChild(b);
+    });
+}
+
+function randomFail(){
+    let arr=["Қате 😅","Ойлан 😏","Болмайды 😄","Тағы таңда 😌","Nope 😜"];
+    return arr[Math.floor(Math.random()*arr.length)];
+}
+
+function showSlider(){
+    document.body.innerHTML=`
+    <h1>Жүрек, мені қаншалықты сағындың? 🥺</h1>
+    <input type="range" min="0" max="100" value="50" id="r">
+    <h2 id="val">50%</h2>
+    <button class="good" onclick="finish()">Жіберу ❤️</button>
+    `;
+    r.oninput=()=> val.innerText=r.value+"%";
+}
+
+function finish(){
+    document.body.innerHTML=`
+    <h1>😏 ${r.value}% ғана ма?</h1>
+    <h2>Кездесуде толықтырамыз ❤️</h2>
+    `;
+}
+
+/* ❤️ жүрек генерация */
+setInterval(()=>{
+    let h=document.createElement("div");
+    h.className="heart";
+    h.innerText="❤️";
+    h.style.left=Math.random()*100+"%";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),5000);
+},300);
+
+renderStart();
+</script>
+
+</body>
+</html>
